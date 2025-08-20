@@ -16,8 +16,22 @@ const CountryCreate = () => {
 
   const onSubmit = async (data) => {
     console.log("Country data submitted:", data);
+
+    // Adaptar los datos al schema de backend
+    const payload = {
+      nombreComun: data.nombreComun,
+      nombreOficial: data.nombreOficial,
+      capital: data.capital, // el backend lo normaliza a array
+      region: data.region,
+      poblacion: Number(data.poblacion) || 0,
+      area: Number(data.area) || 0,
+      banderas: { svg: data.bandera },
+      gini: data.gini === "" ? undefined : Number(data.gini),
+      creador: data.creador,
+    };
+
     try {
-      await addCountry(data); // data ya contiene name y flag
+      await addCountry(payload);
       navigate("/dashboard");
       alert("País creado exitosamente");
     } catch (err) {
@@ -33,51 +47,98 @@ const CountryCreate = () => {
         <h2 className="text-lg font-semibold mb-4">Crear nuevo País</h2>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Nombre del país */}
+          {/* Nombre común */}
           <input
             className="border border-gray-700 p-2 rounded mb-4 w-full"
-            placeholder="Nombre del país"
+            placeholder="Nombre común"
             type="text"
-            {...register("name", {
-              required: "El nombre del país es obligatorio",
-              minLength: {
-                value: 2,
-                message: "El nombre debe tener al menos 2 caracteres",
-              },
+            {...register("nombreComun", {
+              required: "Este campo es obligatorio",
             })}
           />
-          {errors.name && (
-            <p className="text-red-500 mb-4">{errors.name.message}</p>
+          {errors.nombreComun && (
+            <p className="text-red-500 mb-4">{errors.nombreComun.message}</p>
           )}
 
-          {/* URL de la bandera */}
+          {/* Nombre oficial */}
+          <input
+            className="border border-gray-700 p-2 rounded mb-4 w-full"
+            placeholder="Nombre oficial"
+            type="text"
+            {...register("nombreOficial", {
+              required: "Este campo es obligatorio",
+            })}
+          />
+          {errors.nombreOficial && (
+            <p className="text-red-500 mb-4">{errors.nombreOficial.message}</p>
+          )}
+
+          {/* Capital */}
+          <input
+            className="border border-gray-700 p-2 rounded mb-4 w-full"
+            placeholder="Capital"
+            type="text"
+            {...register("capital", { required: "La capital es obligatoria" })}
+          />
+          {errors.capital && (
+            <p className="text-red-500 mb-4">{errors.capital.message}</p>
+          )}
+
+          {/* Región */}
+          <input
+            className="border border-gray-700 p-2 rounded mb-4 w-full"
+            placeholder="Región"
+            type="text"
+            {...register("region", { required: "La región es obligatoria" })}
+          />
+          {errors.region && (
+            <p className="text-red-500 mb-4">{errors.region.message}</p>
+          )}
+
+          {/* Bandera (URL) */}
           <input
             className="border border-gray-700 p-2 rounded mb-4 w-full"
             placeholder="URL de la bandera"
             type="text"
-            {...register("flag", {
-              required: "La URL de la bandera es obligatoria",
-              pattern: {
-                value: /^(ftp|http|https):\/\/[^ "]+$/,
-                message: "Por favor ingrese una URL válida",
-              },
-            })}
+            {...register("bandera", { required: "La bandera es obligatoria" })}
           />
-          {errors.flag && (
-            <p className="text-red-500 mb-4">{errors.flag.message}</p>
+          {errors.bandera && (
+            <p className="text-red-500 mb-4">{errors.bandera.message}</p>
           )}
 
-          {/* Continente */}
+          {/* Población */}
           <input
             className="border border-gray-700 p-2 rounded mb-4 w-full"
-            placeholder="Continente"
-            type="text"
-            {...register("continent", {
-              required: "El continente es obligatorio",
-            })}
+            placeholder="Población"
+            type="number"
+            {...register("poblacion")}
           />
-          {errors.continent && (
-            <p className="text-red-500 mb-4">{errors.continent.message}</p>
+
+          {/* Área */}
+          <input
+            className="border border-gray-700 p-2 rounded mb-4 w-full"
+            placeholder="Área en km²"
+            type="number"
+            {...register("area")}
+          />
+
+          {/* Gini */}
+          <input
+            className="border border-gray-700 p-2 rounded mb-4 w-full"
+            placeholder="Indice Gini"
+            type="number"
+            {...register("gini", { min: 0, max: 100 })}
+          />
+
+          {/* Creador */}
+          <input
+            className="border border-gray-700 p-2 rounded mb-4 w-full"
+            placeholder="Nombre del creador"
+            type="text"
+            {...register("creador", { required: "El creador es obligatorio" })}
+          />
+          {errors.creador && (
+            <p className="text-red-500 mb-4">{errors.creador.message}</p>
           )}
 
           {/* Botón de enviar */}

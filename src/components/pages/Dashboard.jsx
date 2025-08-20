@@ -84,7 +84,7 @@ const Dashboard = () => {
               <td className="p-2 border">{country.nombreComun}</td>
               <td className="p-2 border">{country.capital}</td>
               <td className="p-2 border">
-                {country.poblacion.toLocaleString()}
+                {country.poblacion ? country.poblacion.toLocaleString() : "N/D"}
               </td>
               <td className="p-2 border">
                 {country.area ? country.area.toLocaleString() : "N/D"}
@@ -94,7 +94,7 @@ const Dashboard = () => {
               </td>
               <td className="p-2 border">
                 <button
-                  onClick={() => handleEdit(country.id)}
+                  onClick={() => handleEdit(country._id)}
                   className="bg-yellow-400 px-2 py-1 rounded mr-2"
                 >
                   ✏️ Editar

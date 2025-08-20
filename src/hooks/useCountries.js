@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { fetchAllCountries, deleteCountryAPI, fetchCountries } from "../services/countriesAPI";
+import { addCountryAPI, fetchAllCountries, deleteCountryAPI, fetchCountries, updateCountryAPI } from "../services/countriesAPI";
 
 
 const useCountries = () => {
@@ -126,6 +126,30 @@ const useCountries = () => {
       setLoading(false);
     }
   };
+  const updateCountry = async (id, updatedData) => {
+    setLoading(true);
+    try {
+      const response = await updateCountryAPI(id, updatedData);
+      setCountriesData((prev) =>
+        prev.map((country) => (country._id === id ? response : country))
+      );
+    } catch (error) {
+      console.error("Error updating country:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const addCountry = async (payload) => {
+    setLoading(true);
+    try {
+      const response = await addCountryAPI(payload);
+      setCountriesData((prev) => [...prev, response]);
+    } catch (error) {
+      console.error("Error adding country:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return {
     countryData,            // un solo país
@@ -144,7 +168,9 @@ const useCountries = () => {
     handleOpenModalFavorites,
     handleCloseFavorites,
     isFavorite,
-    deleteCountry
+    deleteCountry,
+    updateCountry,
+    addCountry
   };
 };
 

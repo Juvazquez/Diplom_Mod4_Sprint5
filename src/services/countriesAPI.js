@@ -24,3 +24,13 @@ export const deleteCountryAPI = async (id) => {
   const response = await axios.delete(url);
   return response.data;
 };
+export const updateCountryAPI = async (id, updatedData) => {
+  const url = `${baseUrl}/api/pais/editar/${id}`;
+  const response = await axios.put(url, updatedData);
+  return response.data;
+};
+export const addCountryAPI = async (payload) => {
+  const url = `${baseUrl}/api/pais/agregar`;
+  const response = await axios.post(url, payload);
+  return response.data;
+};
